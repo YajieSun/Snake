@@ -1,10 +1,10 @@
 $(document).ready(function(){
   var canvas = document.getElementById("myCanvas");
   var ctx = canvas.getContext("2d");
-  var stepLength = 10;
-  canvas.width = 500;
-  canvas.height = 250;
-  var direction, snakeArray, appleArray, interval;
+  canvas.width = 800;
+  canvas.height = 400;
+  var stepLength = canvas.width / 50;
+  var direction, snakeArray, appleArray, interval, score, difficulty;
   
   initGame();
   
@@ -13,6 +13,8 @@ $(document).ready(function(){
     appleArray = [];
     direction = 'up';
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    score = 0;
+    $("#score").text("Score: " + score)
     createSnake();
     createApple();
   };
@@ -89,6 +91,8 @@ $(document).ready(function(){
     //second part: check if the snake eats an apple after the move, if it does, add one square to the tail. The new tail should have the same position as the old tail that was deleted.
     var apple = appleArray[0];
     if (snakeNewHead.x === apple.x && snakeNewHead.y === apple.y){
+      score += 10;
+      $("#score").text("Score: " + score)
       appleArray.pop();
       snakeArray.push(snakeTail);
       ctx.fillRect(snakeTail.x, snakeTail.y, stepLength, stepLength);

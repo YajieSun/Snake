@@ -6,5 +6,5 @@ body{
 
 canvas{
   outline: solid 2px black;
-  width: 70%;
+  margin-bottom: 20px;
 }
