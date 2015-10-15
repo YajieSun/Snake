@@ -4,7 +4,7 @@ $(document).ready(function(){
   canvas.width = 800;
   canvas.height = 400;
   var stepLength = canvas.width / 50;
-  var direction, snakeArray, appleArray, interval, score, difficulty;
+  var direction, snakeArray, appleArray, interval, score, difficulty, gaming;
   
   initGame();
   
@@ -14,9 +14,13 @@ $(document).ready(function(){
     direction = 'up';
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     score = 0;
+    gaming = false;
     $("#score").text("Score: " + score)
     createSnake();
     createApple();
+    if (interval) {
+      clearInterval(interval);
+    }
   };
   
   function createSnake(){
@@ -43,7 +47,8 @@ $(document).ready(function(){
   
   //check if snakeHead is outside canvas or the snakeHead hits snake body. If so, the game ends.
   function gameEnds(snakeHead){
-    if (snakeHead.x < 0 || snakeHead.x >= canvas.width || snakeHead.y < 0 || snakeHead.y >= canvas.height || checkCollision(snakeHead, snakeArray.slice(1))) {
+    if (snakeHead.x < 0 || snakeHead.x >= canvas.width || snakeHead.y < 0 
+      || snakeHead.y >= canvas.height || checkCollision(snakeHead, snakeArray.slice(1))) {
       return true;
     } else {
       return false;
@@ -88,7 +93,8 @@ $(document).ready(function(){
     ctx.fillStyle = "black";
     ctx.fillRect(snakeNewHead.x, snakeNewHead.y, stepLength, stepLength);
     
-    //second part: check if the snake eats an apple after the move, if it does, add one square to the tail. The new tail should have the same position as the old tail that was deleted.
+    //second part: check if the snake eats an apple after the move, if it does, add one square to the tail. 
+    //The new tail should have the same position as the old tail that was deleted.
     var apple = appleArray[0];
     if (snakeNewHead.x === apple.x && snakeNewHead.y === apple.y){
       score += 10;
@@ -101,8 +107,7 @@ $(document).ready(function(){
     
     //third part: after updating everything, checks if the game ending condition is met. If it is, ends the game.
     if (gameEnds(snakeNewHead)){
-      clearInterval(interval);
-      initGame();
+       initGame();
     }
   };
   
@@ -119,6 +124,12 @@ $(document).ready(function(){
   });
   
   $('#start').click(function() {
+    //If the user is playing a game, clicking Start will reset and start the game. 
+    //Else if the game is initialized but the user is not playing, just starts the game.
+    if (gaming) {
+      initGame();
+    }
+    gaming = true;
     interval = setInterval(updateSnake, 500);
   });
   
